@@ -1,0 +1,309 @@
+<!--The following file is running on node Server -->
+<!--Since the requirement was small I haven't used ROUTING. If having more alteration the routing will be a good option -->
+
+<!DOCTYPE html>
+<html ng-app='myViralTag'>
+    <!--All the scripts to load -->
+	<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-moment/0.9.0/angular-moment.min.js"></script>
+	
+	<!--Can be kept in seperate file style.css -->
+	
+	<style>
+		#articleDescription {
+			float-left:30px;
+		}
+		.label-default{
+			background-color : #cc0000
+		}
+		table tbody tr:nth-child(odd)	{
+			background-color: #CCFFF5;
+			font-family : monospace;
+		}
+		table tbody tr:nth-child(even) {
+			background-color: #33FFD6;
+			font-family : monospace;
+		}
+		table thead tr th{
+			border-bottom:0px;
+			text-align: left;
+			float-left:8px;
+			font-family : monospace;
+			font-weight : bold;
+			font-style : italic;
+		}
+		h1{
+			font-size : xx-large;
+			font-style : italic;
+			font-family : cursive;
+		}
+		#newFeed{
+			float: right;  
+		}
+		.well{
+			white-space : normal;
+			background-color : white;
+		}
+	</style>
+
+	<body ng-controller = 'myController'  >
+	<div class="container" id = "feedMainPage">
+		<div class="row">
+			<div class="col-sm-4" style = "padding-top: 223px">
+				<div class="container">
+					<button type="button" class="btn btn-default" data-toggle="collapse" data-target="#demo"><span class="glyphicon glyphicon-th-list"></span>  Your Feeds</button>
+					<div id="demo" class="collapse">
+						<div class="panel panel-default" style = "width:25%">
+							<div class="panel-body" ng-repeat="data in dataToSend">
+								<a href = "#">
+									<h5 id = "articleDescription" ng-click = "openFeeds(data.title,data.url)">
+										<img src={{data.imageSrc}} alt={{data.title}} height="20" width="20">
+										<b><i>{{data.title}}</i></b>
+									</h5>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<div class="center-block">
+					<div id = "title">
+						<div id = "menu1"class="page-header" style = "text-align : center">
+							<img src = "https://www.viraltag.com/images/brand/logo_viraltag.png"><h1 text-align="center" text>Welcome To ViralTag</h1>      
+						</div>
+					</div>
+					<h3>Discover and Add content to your ViralTag</h3><br>
+					<input placeholder = "Search Any Field"></input> &nbsp <span class="glyphicon glyphicon-search"></span>
+					<button type="button" class="btn btn-info" style = "background-color : #cc0000" data-toggle="modal" data-target="#myModal" id = "newFeed">Add a new Feed</button>
+					<br><br><br><br><br><br>
+					<!-- using ng-repeat to loop over feeds -->
+					<div ng-repeat = "data in feedDataToSend" class="well">
+						<a href={{data.alternate[0].href}}>
+						<div class = "row">   				
+							<div class="col-xs-6 col-md-4">
+								<img src={{data.imageSrc}} alt={{data.nameOfThePic}} height="150" width="150">
+							</div>
+							<div class="col-xs-6 col-md-8">
+								<h5 id = "articleDescription"><b><i>{{data.title}}</i></b></h5><br><br>
+								<!--Used Moment.JS -->
+								<time am-time-ago={{data.published}}></time><br>
+								<br>
+								<span class="label label-default" >Board : {{data.origin.title}}</span>
+								</a>
+								<hr>
+								<span class="glyphicon glyphicon-heart"></span> Like &nbsp &nbsp &nbsp &nbsp &nbsp<span class="glyphicon glyphicon-comment"></span> Comment
+								&nbsp &nbsp &nbsp &nbsp &nbsp
+								<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myFeedModal" ng-click = "currentFeed(data)">
+									<span class="glyphicon glyphicon-align-justify"></span> Open
+								</button>
+							</div>
+						</div>
+						<!-- Modal for displaying extra details of the feed -->
+						<div class="modal fade" id="myFeedModal" role="dialog">
+							<div class="modal-dialog">
+
+								<div class="modal-content" >
+
+									<div class="modal-header">
+										<h5 class="modal-title" id = "articleDescription"><b><i>{{newData.title}}</i></b></h5>
+									</div>
+									<div class="modal-body">
+										<div class = "row">   				
+											<div class="col-xs-6 col-md-4">
+											<img src={{newData.imageSrc}} alt={{newData.nameOfThePic}} height="150" width="150"></div>
+											<div class="col-xs-6 col-md-8">
+
+												<span class="label label-default" >Board : {{newData.origin.title}}</span>
+												<br>
+												<br>
+												<h6>Description : {{newData.nameOfThePic}}</h6>
+												</a>
+												<hr>
+												<span class="glyphicon glyphicon-heart"></span> Like &nbsp &nbsp &nbsp &nbsp &nbsp<span class="glyphicon glyphicon-comment"></span> Comment
+												&nbsp &nbsp &nbsp &nbsp &nbsp
+
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button data-dismiss="modal">Close</button>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Modal to add a new feed -->
+				<div class="modal fade" id="myModal" role="dialog">
+					<div class="modal-dialog">
+
+						<!-- Modal content-->
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">Add a new feed</h4>
+							</div>
+							<div class="modal-body">
+								<input placeholder = "Enter RSS Title" ng-model = "TitleOfFeed"></input><br><br>
+								<input placeholder = "Enter RSS URL" ng-model = "URLOfFeed"></input>
+							</div>
+							<div class="modal-footer">
+								<button ng-click = "submitFeed(TitleOfFeed,URLOfFeed)">Submit</button>
+								<button ng-click = "reload()">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+	//Main Controller to design the front-end
+	
+	var dataToSend = [];
+
+	var newFeed = {
+		"url":"http://cloud.feedly.com/v3/streams/contents?streamId=feed/https://in.pinterest.com/abhhisheksharma/feed.rss",
+		"title":"PintrestFeeds"
+	};
+	
+	//Intiating Angular model for ng-app='myViralTag'
+	
+	var app = angular.module('myViralTag', ['angularMoment']);
+	
+	//Defining Controller
+	
+	app.controller('myController', function($http,$scope) {
+	
+		$scope.feedImg = "http://www.macleans.ca/wp-content/uploads/2009/03/rss-icon.jpg";
+		
+		//Generic Function to reload the page
+		$scope.reload = function(){
+			console.log("coming to reload");
+			location.reload();
+		}
+		
+		//Generic Function to get the list of all FEED's
+		
+		$http({
+		method: 'GET',
+		url: 'http://localhost:8080/newFeed'
+		}).then(function successCallback(feeds) {
+		
+			angular.forEach(feeds.data,function(value, key){
+				var tempObj = {};
+				tempObj.title = value.title;
+				tempObj.url = value.url;
+				tempObj.imageSrc = "http://www.mining.com/wp-content/uploads/2011/01/rssicon.jpg";
+				dataToSend.push(tempObj);
+			});
+			
+			//Success Sending the data to the front-end using data-binding
+			$scope.dataToSend = dataToSend;
+		
+		}, function errorCallback(response) {
+			// In error
+			console.log("Error in get call");
+		});
+
+		$scope.pins = [];
+
+		//Function to open feed's details
+		
+		$scope.openFeeds = function(title,url){
+		var feedDataToSend = [];
+		var newFeed = {};
+		newFeed.url = url;
+		newFeed.title = title;
+		
+		//Using $http to PUT call, as using AngularJs 1.0
+		
+		$http({
+		method: 'PUT',
+		data: newFeed,
+		url: 'http://localhost:8080/newFeed'
+		}).then(function successCallback(response) {
+		
+			var items = response.data.response.items;
+			$scope.feedId = response.data.response.id; 
+			$scope.updatedAt = response.data.response.updated; 
+			$scope.feedTitle = response.data.response.title; 
+			$scope.feedLink = response.data.response.alternate[0].href; 
+			angular.forEach(items,function(value, key){
+				var tempObj = {};
+				tempObj.title = value.title;
+				tempObj.originId = value.originId;
+				tempObj.published = value.published;
+				tempObj.crawled = value.crawled;
+				tempObj.alternate = value.alternate;
+				tempObj.origin = value.origin;
+				tempObj.unread = value.unread;
+				var string = value.summary.content;
+				tempObj.nameOfThePic = string.replace(/(<([^>]+)>)/ig,"");
+				tempObj.imageSrc = removeTag(string);
+				feedDataToSend.push(tempObj);
+			});
+			$scope.feedDataToSend = feedDataToSend;
+		
+		}, function errorCallback(response) {
+			// In error
+			console.log("Error in get call");
+		});
+		}
+
+
+
+		//Generic function to submit feed
+		$scope.submitFeed = function(title,url){
+			var newFeed = {};
+			newFeed.title = title;
+			if(url !== undefined){
+				var n = url.length;
+				if(url[n-1] == '/'){
+					newFeed.url = 'http://cloud.feedly.com/v3/streams/contents?streamId=feed/'+url+'feed.rss';
+				}
+				else{
+					console.log("no / ");
+					newFeed.url = 'http://cloud.feedly.com/v3/streams/contents?streamId=feed/'+url+'/feed.rss';
+				}
+				$http({
+					method: 'POST',
+					data: newFeed,
+					url: 'http://localhost:8080/newFeed'
+				}).then(function successCallback(response) {
+					console.log("Data Posted");
+				}, function errorCallback(response) {
+					console.log("Error while Posting Data");
+				});
+				$scope.TitleOfFeed = "",
+				$scope.URLOfFeed = ""
+			}
+		}
+		//Generic function to display current data in bootstrap modal while using ng-repeat
+		$scope.currentFeed = function(data){
+			$scope.newData = data;
+		}
+
+	});
+	
+	//Generic function to fetch image src url
+	var removeTag = function(input){
+		var regex = /<img.*?src="(.*?)"/;
+		var clearedString = regex.exec(input)[1];
+		return(clearedString); 
+
+	}
+	</script>
+	</body>
+</html>
+
